@@ -1,0 +1,543 @@
+import React  from 'react';
+
+import * as d3 from 'd3';
+import India from '../India'
+import Table from '../Table';
+import Header from "../component/Header";
+import Pie from "../component/Pie";
+import Navbar from "../component/Navbar/Navbar";
+import Step from "../component/Step/Step";
+import Dummy from "../Dummy/Dummy";
+
+
+
+function Admin() {
+
+  return (
+    
+    <div>
+      <div className='App'><Header /></div>      
+      <div className='w-60'><Table /></div>
+      <div className='w-40'><India /></div>
+      <div className='b-50'><Pie /></div>
+
+    </div>
+  )
+}
+
+
+export default Admin;
+
+
+
+
+.app {
+    display: flex;
+    width: 100%;
+  }
+  
+  .map-container {
+    width: 42% !important; 
+    height: 50% !important; 
+    margin: auto; 
+    display: flex;
+    justify-content: space-between;
+    width:42%
+  }
+  
+  .table-container {
+    
+    height: 50%;
+    overflow: auto;
+    
+  }
+  
+  .table {
+    width: 50%;
+    border-collapse: collapse;
+  }
+  
+  .table th, .table td {
+    border: 1px solid #ddd;
+    padding: 8px;
+  }
+  
+  .table th {
+    background-color: #f2f2f2;
+  }
+  
+  
+  .main-container{
+    display: flex;
+    flex-direction: row;
+    gap: 20px;
+  }
+  .map-area svg {
+    display: inline-block;
+    position: absolute;
+    top: 0px;
+    left: unset !important;
+  }
+  .w-60{
+    width: 60%;
+    float: left;
+  }
+  .w-40{
+    width: 40%;
+    
+  }
+  .b-50{
+    width: 22%;
+    float:right;
+    flex-direction: column;
+    
+      position: absolute;
+      left: 1322px;
+      top: 610px;
+  
+  }
+  .navbar {
+    list-style-type: none;
+    padding: 0;
+    margin: 0;
+
+    display: flex;
+  }
+  
+  .navbar li {
+    margin-right: 20px; 
+  }
+  
+  .navbar li:last-child {
+    margin-right: 0; 
+  }
+  
+  .navbar li a {
+    text-decoration: none;
+    color: #333; 
+  }
+
+
+import React, { useState , useEffect} from 'react'
+import './Login.css'
+
+import { json, useNavigate } from 'react-router-dom';
+
+
+const Login = () => {
+    const INITIAL_STATE = {
+
+        emailid: "",
+        password: "",
+    };
+    const [action, setAction] = useState("Login");
+    const [data, setData] = useState(INITIAL_STATE)
+    const [userData , setUserData] = useState([]);
+    const navigate = useNavigate();
+
+    
+    const storeData = (e) => {
+        const { name, value } = e.target
+        setData((prev) => (
+            { ...prev, [name]: value }
+        ))
+    }
+
+    useEffect(()=>{
+        setUserData(JSON.parse(localStorage.getItem("users")))
+    },[])
+
+    
+
+    const handleSubmit = (e) => {
+        e.preventDefault();
+        console.log("form data is  : ", data);
+        const result = userData.find((item) => item.emailid === data.emailid && item.password === data.password)
+        setData(INITIAL_STATE);
+        if(result){
+            navigate('/admin')         // direct to home page
+        }else{
+            alert("Invalid email or password")
+        }
+
+
+    }
+    return (
+        <div className='container'>
+            <form onSubmit={handleSubmit}>
+                <div className="header">
+                    <div className="text">{action}</div>
+                    <div className="underline"></div>
+                </div>
+                <div className="inputs">
+                    {action === "Login" &&
+                        <div className="input">
+                            <img src="" alt="" />
+                            <input type="text" placeholder='Emailid' name='emailid' value={data.emailid} onChange={(e) => storeData(e)} />
+                        </div>
+                    }
+                    <div className="input">
+                        <img src="" alt="" />
+                        <input type="password" placeholder='password' name='password' value={data.password} onChange={(e) => storeData(e)} />
+                    </div>
+
+                
+                
+                   <div className="submit-container">
+                        {/* <div className={action==="Sign Up"?"submit submit":"submit gray"} onClick={()=>{setAction("Sign Up")}}>Sign Up</div>
+                <div className={action==="Login"?"submit submit":"submit gray"} onClick={()=>{setAction("Login")}}>Login</div> */}
+
+                        
+
+                        <button type='submit'>Submit</button>
+                    </div>
+                </div>
+            </form>
+
+        </div>
+    )
+}
+
+
+export default Login
+
+
+navbar
+import React from 'react';
+import { Link } from 'react-router-dom';
+import './Navbar.css'
+
+function Navbar() {
+  return (
+    <nav className="navbar">
+      <ul >
+        <li>
+          <Link to="/">Home</Link>
+        </li>
+        <li>
+          <Link to="/Pie">Pie</Link>
+        </li>
+        <li>
+          <Link to="/India">Map</Link>
+        </li>
+        <li>
+          <Link to="/Tab">Table</Link>
+        </li>
+      </ul>
+    </nav>
+  );
+}
+
+export default Navbar;
+signup
+
+import React, { useState } from 'react'
+import './Signup.css'
+
+import { json } from 'react-router-dom';
+
+
+
+const SignUp = () => {
+    const INITIAL_STATE = {
+        FirstName: "",
+        LastName: "",
+        password: "",
+        emailid: "",
+    };
+    const [action, setAction] = useState("Sign Up");
+    const [data, setData] = useState(INITIAL_STATE)
+    
+
+    const storeData = (e) => {
+        const { name, value } = e.target
+        setData((prev) => (
+            { ...prev, [name]: value }
+        ))
+    }
+    const handleSubmit = (e) => {
+        e.preventDefault();
+        console.log("userData");
+        const pastUsers = JSON.parse(localStorage.getItem("users") || "[]");
+        console.log("local data", pastUsers);
+        const updatedUser = [...pastUsers, data];
+        localStorage.setItem("users", JSON.stringify(updatedUser))
+        setData(INITIAL_STATE);
+    }
+    return (
+        <div className='container'>
+            <form onSubmit={handleSubmit}>
+                <div className="header">
+                    <div className="text">{action}</div>
+
+                </div>
+                <div className="inputs">
+                    {action === "Sign Up" &&
+                        <div className="input">
+
+                            <input type="text" placeholder='FirstName' name='FirstName' value={data.FirstName} onChange={(e) => storeData(e)} />
+
+
+                        </div>
+
+                    }
+                    <div className="input">
+                        <input type="text" placeholder='LastName' name='LastName' value={data.LastName} onChange={(e) => storeData(e)} />
+
+
+                    </div>
+                    <div className="input">
+
+                        <input type="email" placeholder='EmailId' name='emailid' value={data.emailid} onChange={(e) => storeData(e)} />
+                    </div>
+                    <div className="input">
+
+                        <input type="password" placeholder='Password' name='password' value={data.password} onChange={(e) => storeData(e)} />
+                    </div>
+                </div>
+                <div className="forgot-password">Lost Password? <span>Click Here</span>
+                    <div className="submit-container">
+                        <button type='handleSubmit'>Submit</button>
+                    </div>
+                </div>
+            </form>
+
+        </div>
+    )
+}
+
+
+export default SignUp
+
+header
+import React, { useState } from "react";
+import { Modal } from "antd";
+import "./Header.css";
+import Navbar from "./Navbar/Navbar";
+
+export default function Header() {
+  const [isModalVisible, setIsModalVisible] = useState(false);
+
+  const showModal = () => {
+    setIsModalVisible(true);
+  };
+
+  const handleOk = () => {
+    setIsModalVisible(false);
+  };
+
+  const handleCancel = () => {
+    setIsModalVisible(false);
+  };
+
+  const handleSignOut = () => {
+    showModal();
+  };
+
+  return (
+    <header className="Header">
+      <img src={require("file:///home/bhavesh/Downloads/logo.png").default}
+        className="Logo"
+        alt="logo"
+      />
+      <nav className="Nav">
+        <h1>Admin Panel</h1>
+        <button onClick={handleSignOut}>SignOut</button>
+        <Modal
+          title="Sign Out"
+          visible={isModalVisible}
+          onOk={handleOk}
+          onCancel={handleCancel}
+        >
+          <p>Are you sure you want to sign out?</p>
+        </Modal>
+      </nav>
+      
+    </header>
+  );
+}
+
+india
+
+import React, { useState } from "react";
+import ReactDatamaps from "react-india-states-map";
+
+const STATES = {
+  Maharashtra: {
+    value: 50,
+    content: {
+      txt:
+        "Lorem ipsum dolor sit amet consectetur adipisicing elit. A quisquam quae laboriosam sed magni aliquam dolore sequi libero harum, hic nihil. Omnis eos deserunt molestiae harum, cum nemo et temporibus?"
+    }
+  }
+};
+
+const Example = () => {
+  const [activeState, setactiveState] = useState({
+    data: STATES.Maharashtra,
+    name: "India"
+  });
+
+  const [stateLists, setStateLists] = useState(STATES);
+
+  const stateOnClick = (data, name) => {
+    setactiveState({ data, name });
+  };
+
+  return (
+    <div className="map-area" style={{ width: "25%" }}> {/* Set width to 50% */}
+      <ReactDatamaps
+        regionData={stateLists}
+        mapLayout={{
+          hoverTitle: "Count",
+          noDataColor: "#D36418",
+          borderColor: "#ffffff"
+        }}
+        hoverComponent={({ value }) => {
+          return (
+            <>
+              <p>{value.name}</p>
+            </>
+          );
+        }}
+        onClick={stateOnClick}
+        activeState={activeState}
+      />
+    </div>
+  );
+};
+
+export default Example;
+
+.App {
+    font-family: sans-serif;
+    text-align: center;
+    width:42%;
+  }
+  
+  body {
+    background-color: black;
+  }
+  
+  .indiaMap {
+    padding-top: 10px;
+  }
+  app.jsx
+import React, { useEffect, useState } from 'react';
+import { Route, Routes,Switch } from 'react-router-dom';
+
+import './App.css';
+import Admin from "./Admin/Admin"
+import Login from './component/Login/Login';
+import Signup from './component/Signup/Signup';
+import Tab from './component/Tab';
+import Step from './component/Step/Step';
+import Dummy from './Dummy/Dummy';
+
+
+
+function App() {
+  return (  
+    <div> 
+      <Routes>
+        <Route path='/signup' element={<Signup />} />
+
+        <Route path='/login' element={<Login />} />
+
+        <Route path='/' element={<Admin />} />
+
+        <Route path='/tab' element={<Tab />} /> 
+
+        <Route path='/step' element={<Step />}/>
+
+        <Route path='/dummy' element={<Dummy />}/>
+
+
+
+      </Routes>
+
+    </div>
+    /*  <div>
+        <div className='App'><Header /></div>
+        <div className='w-60'><Table /></div>
+        <div className='w-40'><India /></div>
+        <div className='b-50'><Pie/></div>
+        
+      </div>*/
+  )
+}
+
+
+export default App;
+
+
+
+
+
+app.css
+.app {
+  display: flex;
+  width: 100%;
+}
+
+.map-container {
+  width: 42% !important; 
+  height: 50% !important; 
+  margin: auto; 
+  display: flex;
+  justify-content: space-between;
+  width:42%
+}
+
+.table-container {
+  
+  height: 50%;
+  overflow: auto;
+  
+}
+
+.table {
+  width: 50%;
+  border-collapse: collapse;
+}
+
+.table th, .table td {
+  border: 1px solid #ddd;
+  padding: 8px;
+}
+
+.table th {
+  background-color: #f2f2f2;
+}
+
+
+.main-container{
+  display: flex;
+  flex-direction: row;
+  gap: 20px;
+}
+.map-area svg {
+  display: inline-block;
+  position: absolute;
+  top: 0px;
+  left: unset !important;
+}
+.w-60{
+  width: 60%;
+  float: left;
+}
+.w-40{
+  width: 40%;
+  
+}
+.b-50{
+  width: 22%;
+  float:right;
+  flex-direction: column;
+  
+    position: absolute;
+    left: 1322px;
+    top: 610px;
+
+}
+  
